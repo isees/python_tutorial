@@ -1,28 +1,29 @@
+from urllib.error import URLError
+from urllib.request import urlretrieve
+
 import requests
-import urllib
 import re
 import os.path
 import time
 import socket
-from urllib2 import URLError
 
 
 def add_image_url_to_wait_list(image_url):
     if image_url not in waitList:
         waitList.append(image_url)
-        print image_url + " added to waitList[" + str(waitList.__len__()) + "]"
+        print(image_url + " added to waitList[" + str(waitList.__len__()) + "]")
 
 
 def remove_image_url_from_wait_list(image_url):
     if image_url in waitList:
         waitList.remove(image_url)
-        print image_url + " removed from waitList[" + str(waitList.__len__()) + "]"
+        print(image_url + " removed from waitList[" + str(waitList.__len__()) + "]")
 
 
 def add_image_url_to_saved_list(image_url):
     if image_url not in cacheList:
         cacheList.append(image_url)
-        print image_url + " added to cacheList[" + str(cacheList.__len__()) + "]"
+        print(image_url + " added to cacheList[" + str(cacheList.__len__()) + "]")
         remove_image_url_from_wait_list(image_url)
 
 
@@ -35,27 +36,27 @@ def download_image_array(image_array=[]):
             temp_path = image_path + ".tmp"
             if os.path.exists(image_path):
                 add_image_url_to_saved_list(image_url)
-                print image_name + " exists"
+                print(image_name + " exists")
                 continue
             try:
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
-                urllib.urlretrieve(image_url, temp_path)
+                urlretrieve(image_url, temp_path)
                 os.rename(temp_path, image_path)
                 add_image_url_to_saved_list(image_url)
-            except URLError, e:
+            except URLError as e:
                 add_image_url_to_wait_list(image_url)
-                print image_url + " download error\n" + e.message
-                print "Sleep " + sleepTime + "s"
+                print(image_url + " download error\n" + e.message)
+                print("Sleep " + sleepTime + "s")
                 time.sleep(sleepTime)
-                print "Waked to work :)"
-            except Exception, e:
+                print("Waked to work :)")
+            except Exception as e:
                 if os.path.isfile(temp_path):
                     os.remove(temp_path)
                 add_image_url_to_wait_list(image_url)
-                print image_url + " download exception: " + e.message
+                print(image_url + " download exception: " + e.message)
         else:
-            print image_name + " repeated"
+            print(image_name + " repeated")
 
 
 socket.setdefaulttimeout(15)
@@ -80,7 +81,7 @@ while True:
     # if index == 2:
     #     break
 
-    print "Page " + str(index) + " collecting ..."
+    print("Page " + str(index) + " collecting ...")
 
     result = requests.get(pageUrl)
 
