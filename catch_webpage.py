@@ -8,5 +8,4 @@ tree = html.fromstring(page.content)
 urlList = tree.xpath("//div[@id='content']//ol/li/a/@href")
 # print urlList
 for url in urlList:
-    print url
-
+    print(url)
